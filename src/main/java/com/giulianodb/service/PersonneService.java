@@ -37,6 +37,21 @@ public class PersonneService {
 		repo.deleteById(id);
 	}
 	
+	public Personne update (Personne obj) {
+		Personne newObj = findById(obj.getId());
+		
+		updateData(newObj,obj);
+		
+		return repo.save(newObj);
+		
+	}
+	
+	private void updateData(Personne newObj, Personne obj) {
+		// TODO Auto-generated method stub
+		newObj.setCpf(obj.getCpf());
+		newObj.setNom(obj.getNom());
+	}
+
 	public Personne fromDTO (PersonneDTO objDTO) {
 		return new Personne(objDTO.getId(),objDTO.getNom(), objDTO.getCpf());
 	}

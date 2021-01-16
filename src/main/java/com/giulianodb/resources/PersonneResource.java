@@ -62,4 +62,16 @@ public class PersonneResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<Void> update(@RequestBody PersonneDTO objDTO,@PathVariable String id){
+			
+		Personne obj = service.fromDTO(objDTO);
+		
+		obj.setId(id);
+		
+		service.update(obj);
+		
+		return ResponseEntity.noContent().build();
+	}
+	
 }
