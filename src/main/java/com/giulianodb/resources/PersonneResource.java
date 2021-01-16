@@ -4,6 +4,15 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +32,12 @@ public class PersonneResource {
 	
 	@Autowired
 	private PersonneService service;
+	
+	@Autowired
+	private JobLauncher jobLauncher;
+	  
+	@Autowired
+	private Job importPersonneJob;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<PersonneDTO>> findAll(){
@@ -72,6 +87,34 @@ public class PersonneResource {
 		service.update(obj);
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(value="/batch",method = RequestMethod.GET)
+	public ResponseEntity<List<PersonneDTO>> startBatch(){
+		
+		 final JobParameters jobParameter = new JobParametersBuilder()
+				    .addLong("time", System.currentTimeMillis())
+				    .addString("fileName", "/tmp/personnes.txt")
+				    .toJobParameters();
+				  
+				  try {
+					jobLauncher.run(importPersonneJob, jobParameter);
+				} catch (JobExecutionAlreadyRunningException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JobRestartException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JobInstanceAlreadyCompleteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JobParametersInvalidException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		
+		return ResponseEntity.ok().build();
+		
 	}
 	
 }

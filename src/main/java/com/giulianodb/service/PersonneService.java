@@ -51,6 +51,21 @@ public class PersonneService {
 		newObj.setCpf(obj.getCpf());
 		newObj.setNom(obj.getNom());
 	}
+	
+	public Personne fromFileLine(String line) {
+		String[] lineArray = line.split(",");
+		
+		try {
+			Personne personne = new Personne(null, lineArray[0], lineArray[1]);
+			
+			return personne;
+		} catch (Exception e) {
+			// TODO: handle exception
+//			e.printStackTrace();
+			return null;
+		}
+		
+	}
 
 	public Personne fromDTO (PersonneDTO objDTO) {
 		return new Personne(objDTO.getId(),objDTO.getNom(), objDTO.getCpf());
