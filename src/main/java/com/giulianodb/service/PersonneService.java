@@ -1,10 +1,15 @@
 package com.giulianodb.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.giulianodb.domain.Personne;
 import com.giulianodb.dto.PersonneDTO;
@@ -16,6 +21,9 @@ public class PersonneService {
 	
 	@Autowired
 	private PersonneRepository repo;
+	
+	  @Value("${fileName}")
+	  private String fileName;
 	
 	public List<Personne> findAll(){
 		return repo.findAll();
@@ -35,6 +43,14 @@ public class PersonneService {
 	public void delete(String id) {
 		findById(id);
 		repo.deleteById(id);
+	}
+	
+	public void deleteAll() {
+		List<Personne> listPersonne = findAll();
+		
+		for (Personne personne : listPersonne) {
+			delete(personne.getId());
+		}
 	}
 	
 	public Personne update (Personne obj) {
@@ -66,8 +82,18 @@ public class PersonneService {
 		}
 		
 	}
+	
+	public void saveFile(MultipartFile file) throws URISyntaxException, IOException {
+		
+		File convFile = new File(fileName);
+		file.transferTo(convFile);
+		
+	}
 
 	public Personne fromDTO (PersonneDTO objDTO) {
 		return new Personne(objDTO.getId(),objDTO.getNom(), objDTO.getCpf());
 	}
+
+
+
 }
