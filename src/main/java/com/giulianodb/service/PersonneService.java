@@ -32,6 +32,11 @@ public class PersonneService {
 		return repo.insert(obj);
 	}
 	
+	public void delete(String id) {
+		findById(id);
+		repo.deleteById(id);
+	}
+	
 	public Personne fromDTO (PersonneDTO objDTO) {
 		return new Personne(objDTO.getId(),objDTO.getNom(), objDTO.getCpf());
 	}
