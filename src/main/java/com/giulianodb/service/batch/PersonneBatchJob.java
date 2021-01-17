@@ -27,7 +27,6 @@ public class PersonneBatchJob {
 	@Autowired
 	private StepBuilderFactory stepBuilderFactory;
 	
-	
 	@Bean
 	public Job importPersonneJob (final Step myStep) {
 	  return jobBuilderFactory.get("importPersonneJob")

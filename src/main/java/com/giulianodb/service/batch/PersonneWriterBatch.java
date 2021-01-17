@@ -23,7 +23,6 @@ public class PersonneWriterBatch implements ItemWriter<Personne>{
 		for (Personne personne : items) {
 			personneService.insert(personne);
 		}
-//		System.out.println("Inseriu todos!!");
 	}
 	
 }

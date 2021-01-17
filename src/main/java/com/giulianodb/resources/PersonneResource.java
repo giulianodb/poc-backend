@@ -121,16 +121,12 @@ public class PersonneResource {
 				  try {
 					jobLauncher.run(importPersonneJob, jobParameter);
 				} catch (JobExecutionAlreadyRunningException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (JobRestartException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (JobInstanceAlreadyCompleteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (JobParametersInvalidException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		
@@ -146,10 +142,8 @@ public class PersonneResource {
 				service.saveFile(file);
 				return ResponseEntity.ok().build();
 			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	        

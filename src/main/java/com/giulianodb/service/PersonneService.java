@@ -76,8 +76,6 @@ public class PersonneService {
 			
 			return personne;
 		} catch (Exception e) {
-			// TODO: handle exception
-//			e.printStackTrace();
 			return null;
 		}
 		

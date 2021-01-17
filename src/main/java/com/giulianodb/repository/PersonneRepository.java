@@ -8,5 +8,4 @@ import com.giulianodb.domain.Personne;
 @Repository
 public interface PersonneRepository extends MongoRepository<Personne, String>{
 	
-	
 }

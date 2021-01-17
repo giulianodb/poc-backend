@@ -25,7 +25,7 @@ public class PersonneReaderBatch implements ItemReader<Personne>, InitializingBe
   
   @Autowired
   private PersonneService service;
-//  
+
   @Value("${fileName}")
   private String fileName;
   
@@ -42,7 +42,6 @@ public class PersonneReaderBatch implements ItemReader<Personne>, InitializingBe
     }
   
     br.close();
-//    file.delete();
     return null;
   }
   
