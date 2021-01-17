@@ -31,6 +31,8 @@ import com.giulianodb.domain.Personne;
 import com.giulianodb.dto.PersonneDTO;
 import com.giulianodb.service.PersonneService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(value="/personnes")
 public class PersonneResource {
@@ -45,6 +47,7 @@ public class PersonneResource {
 	private Job importPersonneJob;
 	
 	@RequestMapping(method = RequestMethod.GET)
+	@ApiOperation(value="Recherche tous")
 	public ResponseEntity<List<PersonneDTO>> findAll(){
 		
 		List<Personne> list = service.findAll();
@@ -54,6 +57,7 @@ public class PersonneResource {
 		return ResponseEntity.ok().body(listDTO);
 		
 	}
+	@ApiOperation(value="Recherche par l’ID")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<PersonneDTO> findById(@PathVariable String id){
 			
@@ -75,6 +79,7 @@ public class PersonneResource {
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@ApiOperation(value="Supprimer par ID")
 	public ResponseEntity<Void> delete(@PathVariable String id){
 			
 		service.delete(id);
@@ -83,6 +88,7 @@ public class PersonneResource {
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE)
+	@ApiOperation(value="Supprimer tous")
 	public ResponseEntity<Void> deleteAll(){
 			
 		service.deleteAll();
@@ -90,8 +96,8 @@ public class PersonneResource {
 		return ResponseEntity.noContent().build();
 	}
 	
-	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	@ApiOperation(value="Changer de personne")
 	public ResponseEntity<Void> update(@RequestBody PersonneDTO objDTO,@PathVariable String id){
 			
 		Personne obj = service.fromDTO(objDTO);
@@ -104,6 +110,7 @@ public class PersonneResource {
 	}
 	
 	@RequestMapping(value="/batch",method = RequestMethod.POST)
+	@ApiOperation(value="Commencez la procédure Batch")
 	public ResponseEntity<Void> startBatch(){
 		
 		 final JobParameters jobParameter = new JobParametersBuilder()
@@ -132,7 +139,8 @@ public class PersonneResource {
 	}
 	
 	   @PostMapping("/uploadFile")
-	    public ResponseEntity<Void> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+	   @ApiOperation(value="Envoi de fichiers de personnes")
+	   public ResponseEntity<Void> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 
 	        try {
 				service.saveFile(file);
