@@ -18,36 +18,39 @@ import com.giulianodb.service.PersonneService;
 @StepScope
 @Component
 public class PersonneReaderBatch implements ItemReader<Personne>, InitializingBean {
-  
-  private BufferedReader br;
-  
-  private File file;
-  
-  @Autowired
-  private PersonneService service;
 
-  @Value("${fileName}")
-  private String fileName;
-  
-  @Override
-  public Personne read () throws Exception {
-    try {
-      final String line;
-      if ((line = br.readLine()) != null) {
-    	  
-        return service.fromFileLine(line);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  
-    br.close();
-    return null;
-  }
-  
-  @Override
-  public void afterPropertiesSet () throws Exception {
-    file = new File(fileName);
-    br = new BufferedReader(new FileReader(file));
-  }
+	private BufferedReader br;
+
+	private File file;
+
+	@Autowired
+	private PersonneService service;
+
+	@Autowired
+	private PersonneBatchStatus status;
+
+	@Value("${fileName}")
+	private String fileName;
+
+	@Override
+	public Personne read() throws Exception {
+		try {
+			final String line;
+
+			if ((line = br.readLine()) != null) {
+				status.ajouterLignesTraitees();
+				return service.fromFileLine(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		file = new File(fileName);
+		br = new BufferedReader(new FileReader(file));
+	}
 }

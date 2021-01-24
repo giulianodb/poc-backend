@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.giulianodb.domain.Personne;
 import com.giulianodb.service.PersonneService;
+import com.giulianodb.service.execptions.CpfInvalideException;
 
 @StepScope
 @Component
@@ -17,11 +18,20 @@ public class PersonneWriterBatch implements ItemWriter<Personne>{
 	@Autowired
 	private PersonneService personneService;
 	
+	@Autowired
+	private PersonneBatchStatus status;
+	
 	@Override
 	public void write(List<? extends Personne> items) throws Exception {
 		
 		for (Personne personne : items) {
-			personneService.insert(personne);
+			try {
+				personneService.insert(personne);
+				status.ajouterOK();
+				
+			} catch (CpfInvalideException e) {
+				status.ajouterErreurs();
+			}
 		}
 	}
 	

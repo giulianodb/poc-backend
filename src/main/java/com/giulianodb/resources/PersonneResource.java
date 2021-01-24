@@ -30,6 +30,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.giulianodb.domain.Personne;
 import com.giulianodb.dto.PersonneDTO;
 import com.giulianodb.service.PersonneService;
+import com.giulianodb.service.batch.PersonneBatchStatus;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -45,6 +46,9 @@ public class PersonneResource {
 	  
 	@Autowired
 	private Job importPersonneJob;
+		  
+	@Autowired
+	private PersonneBatchStatus status;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ApiOperation(value="Recherche tous")
@@ -109,10 +113,16 @@ public class PersonneResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@RequestMapping(value="/batch", method = RequestMethod.GET)
+	@ApiOperation(value="Le résulta du dernier batch exécuté")
+	public ResponseEntity<PersonneBatchStatus> statusBatch(){
+		return ResponseEntity.ok().body(status);
+	}
+	
 	@RequestMapping(value="/batch",method = RequestMethod.POST)
 	@ApiOperation(value="Commencez la procédure Batch")
 	public ResponseEntity<Void> startBatch(){
-		
+		status.demarrerStatut();
 		 final JobParameters jobParameter = new JobParametersBuilder()
 				    .addLong("time", System.currentTimeMillis())
 				    .addString("fileName", "/tmp/personnes.txt")

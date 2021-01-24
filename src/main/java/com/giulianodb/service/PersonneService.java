@@ -14,7 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.giulianodb.domain.Personne;
 import com.giulianodb.dto.PersonneDTO;
 import com.giulianodb.repository.PersonneRepository;
+import com.giulianodb.service.execptions.CpfInvalideException;
 import com.giulianodb.service.execptions.ObjectNotFoudException;
+import com.giulianodb.service.utils.Cpf;
 
 @Service
 public class PersonneService {
@@ -27,7 +29,6 @@ public class PersonneService {
 	
 	public List<Personne> findAll(){
 		return repo.findAll();
-		
 	}
 	
 	public Personne findById(String id) {
@@ -37,7 +38,13 @@ public class PersonneService {
 	}
 	
 	public Personne insert(Personne obj) {
-		return repo.insert(obj);
+		
+		if (validerCpf(obj.getCpf())) {
+			return repo.insert(obj);
+		} else {
+			throw new CpfInvalideException("CPF invalide");
+		}
+		
 	}
 	
 	public void delete(String id) {
@@ -56,14 +63,16 @@ public class PersonneService {
 	public Personne update (Personne obj) {
 		Personne newObj = findById(obj.getId());
 		
-		updateData(newObj,obj);
-		
-		return repo.save(newObj);
+		if (validerCpf(obj.getCpf())) {
+			updateData(newObj,obj);
+			return repo.save(newObj);
+		} else {
+			throw new CpfInvalideException("CPF invalide");
+		}
 		
 	}
 	
 	private void updateData(Personne newObj, Personne obj) {
-		// TODO Auto-generated method stub
 		newObj.setCpf(obj.getCpf());
 		newObj.setNom(obj.getNom());
 	}
@@ -82,16 +91,18 @@ public class PersonneService {
 	}
 	
 	public void saveFile(MultipartFile file) throws URISyntaxException, IOException {
-		
 		File convFile = new File(fileName);
 		file.transferTo(convFile);
-		
 	}
 
 	public Personne fromDTO (PersonneDTO objDTO) {
 		return new Personne(objDTO.getId(),objDTO.getNom(), objDTO.getCpf());
 	}
-
+	
+	
+	public Boolean validerCpf(String cpf) {
+		return Cpf.isValidCPF(cpf);
+	}
 
 
 }

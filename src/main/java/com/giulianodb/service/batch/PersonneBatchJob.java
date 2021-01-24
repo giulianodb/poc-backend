@@ -54,7 +54,7 @@ public class PersonneBatchJob {
 	@Bean
 	public TaskExecutor myExecutor () {
 	  final ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-	  taskExecutor.setCorePoolSize(20);
+	  taskExecutor.setCorePoolSize(1);
 	  return taskExecutor;
 	}
 }
