@@ -15,6 +15,7 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.giulianodb.domain.Personne;
 import com.giulianodb.dto.PersonneDTO;
+import com.giulianodb.resources.execptions.StandardError;
 import com.giulianodb.service.PersonneService;
 import com.giulianodb.service.batch.PersonneBatchStatus;
 
@@ -146,11 +148,17 @@ public class PersonneResource {
 	
 	   @PostMapping("/uploadFile")
 	   @ApiOperation(value="Envoi de fichiers de personnes")
-	   public ResponseEntity<Void> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+	   public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 
 	        try {
-				service.saveFile(file);
-				return ResponseEntity.ok().build();
+	        	if (file.getSize() > 0) {
+	        		service.saveFile(file);
+	        		return ResponseEntity.ok().build();
+	        	}
+	        	else {
+	        	
+	        		return ResponseEntity.status(422).body("{\"message\":\"Fichier non envoyé\"}");
+	        	}
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
