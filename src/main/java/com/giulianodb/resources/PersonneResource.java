@@ -17,6 +17,7 @@ import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,6 +55,7 @@ public class PersonneResource {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ApiOperation(value="Recherche tous")
+	@CrossOrigin
 	public ResponseEntity<List<PersonneDTO>> findAll(){
 		
 		List<Personne> list = service.findAll();
@@ -65,6 +67,7 @@ public class PersonneResource {
 	}
 	@ApiOperation(value="Recherche par l’ID")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@CrossOrigin
 	public ResponseEntity<PersonneDTO> findById(@PathVariable String id){
 			
 		Personne obj = service.findById(id);
@@ -73,6 +76,7 @@ public class PersonneResource {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
+	@CrossOrigin
 	public ResponseEntity<Void> insert(@RequestBody PersonneDTO objDTO){
 			
 		Personne obj = service.fromDTO(objDTO);
@@ -85,6 +89,7 @@ public class PersonneResource {
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@CrossOrigin
 	@ApiOperation(value="Supprimer par ID")
 	public ResponseEntity<Void> delete(@PathVariable String id){
 			
@@ -95,6 +100,7 @@ public class PersonneResource {
 	
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ApiOperation(value="Supprimer tous")
+	@CrossOrigin
 	public ResponseEntity<Void> deleteAll(){
 			
 		service.deleteAll();
@@ -104,6 +110,7 @@ public class PersonneResource {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	@ApiOperation(value="Changer de personne")
+	@CrossOrigin
 	public ResponseEntity<Void> update(@RequestBody PersonneDTO objDTO,@PathVariable String id){
 			
 		Personne obj = service.fromDTO(objDTO);
@@ -117,12 +124,14 @@ public class PersonneResource {
 	
 	@RequestMapping(value="/batch", method = RequestMethod.GET)
 	@ApiOperation(value="Le résulta du dernier batch exécuté")
+	@CrossOrigin
 	public ResponseEntity<PersonneBatchStatus> statusBatch(){
 		return ResponseEntity.ok().body(status);
 	}
 	
 	@RequestMapping(value="/batch",method = RequestMethod.POST)
 	@ApiOperation(value="Commencez la procédure Batch")
+	@CrossOrigin
 	public ResponseEntity<Void> startBatch(){
 		status.demarrerStatut();
 		 final JobParameters jobParameter = new JobParametersBuilder()
@@ -148,6 +157,7 @@ public class PersonneResource {
 	
 	   @PostMapping("/uploadFile")
 	   @ApiOperation(value="Envoi de fichiers de personnes")
+	   @CrossOrigin
 	   public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 
 	        try {
